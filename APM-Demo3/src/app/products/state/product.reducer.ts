@@ -4,6 +4,7 @@ import { Product } from '../product';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { ProductActions, ProductActionTypes } from './product.actions';
 import * as fromRoot from '../../state/app.state';
+import { store } from '@angular/core/src/render3/instructions';
 
 // Extends the app state to include the product feature.
 // This is required because products are lazy loaded.
@@ -107,6 +108,49 @@ export function reducer(state = initialState, action: ProductActions): ProductSt
       return {
         ...state,
         products: [],
+        error: action.payload
+      };
+
+    case ProductActionTypes.UpdateProductSuccess:
+      const updatedProducts = state.products.map( 
+        p => p.id === action.payload.id ? action.payload : p
+      );
+
+      return {
+        ...state,
+        products: updatedProducts,
+        error: ''
+      }
+
+    case ProductActionTypes.UpdateProductFail:
+      return {
+        ...state,
+        error: action.payload
+      };
+    
+    case ProductActionTypes.CreateProductSuccess:
+      return {
+        ...state,
+        products: [...state.products, action.payload],
+        error: ''
+      }
+
+    case ProductActionTypes.CreateProductFail:
+      return {
+        ...state,
+        error: action.payload
+      };
+
+    case ProductActionTypes.DeleteProductSuccess:
+      return {
+        ...state,
+        products: state.products.filter(p => p.id !== action.payload),
+        error: ''
+      }
+
+    case ProductActionTypes.DeleteProductFail:
+      return {
+        ...state,
         error: action.payload
       };
 
