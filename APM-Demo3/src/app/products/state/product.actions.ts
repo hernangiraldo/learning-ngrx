@@ -23,7 +23,7 @@ export class ToggleProductCode implements Action {
 export class SetCurrentProduct implements Action {
   readonly type = ProductActionTypes.SetCurrentProduct;
 
-  constructor(public payload: Product) { }
+  constructor(public payload: number) { }
 }
 
 export class ClearCurrentProduct implements Action {

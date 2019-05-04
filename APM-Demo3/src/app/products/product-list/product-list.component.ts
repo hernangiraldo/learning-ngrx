@@ -70,7 +70,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   productSelected(product: Product): void {
-    this.store.dispatch(new productActions.SetCurrentProduct(product));
+    this.store.dispatch(new productActions.SetCurrentProduct(product.id));
   }
 
 }
