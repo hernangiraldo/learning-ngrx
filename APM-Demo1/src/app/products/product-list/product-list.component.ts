@@ -9,6 +9,7 @@ import { ProductService } from '../product.service';
 import { Store, select } from '@ngrx/store';
 import * as fromProduct from '../state/product.reducer';
 import * as productActions from '../state/product.actions';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'pm-product-list',
@@ -16,6 +17,9 @@ import * as productActions from '../state/product.actions';
   styleUrls: ['./product-list.component.css']
 })
 export class ProductListComponent implements OnInit, OnDestroy {
+
+  private componentActive: boolean = true;
+
   pageTitle = 'Products';
   errorMessage: string;
 
@@ -32,8 +36,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    //TODO: Unsuscribe
-    this.store.pipe(select(fromProduct.getCurrentProduct)).subscribe(
+    this.store.pipe(select(fromProduct.getCurrentProduct),
+      takeWhile(() => this.componentActive))
+      .subscribe(
       currentProduct => this.selectedProduct = currentProduct
     );
 
@@ -48,7 +53,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    
+    this.componentActive = false;
   }
 
   checkChanged(value: boolean): void {
